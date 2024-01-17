@@ -6,6 +6,8 @@ myVar = "John"
 MYVAR = "John"
 myvar2 = "John"
 
+#-------------------
+
 """
 Illegal variable names:
 
@@ -13,6 +15,8 @@ Illegal variable names:
 my-var = "John"
 my var = "John"
 """
+
+#-------------------
 
 #Remember that variable names are case-sensitive
 
