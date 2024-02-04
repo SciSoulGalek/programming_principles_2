@@ -4,7 +4,7 @@ Write a function that returns a sublist of movies with an IMDB score above 5.5.
 def higher_55_sublist(movies):
     for key in movies:
         if key["imdb"] > 5.5:
-            print({key["name"]})
+            print(key)
 movies = [
 {
 "name": "Usual Suspects", 
