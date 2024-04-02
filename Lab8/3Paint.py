@@ -6,112 +6,102 @@ Extend example project from https://nerdparadise.com/programming/pygame/part6 an
 3.Eraser
 4.Color selection
 """
-import pygame
-import sys
-from pygame.locals import *
+import pygame, sys
+from random import randint
 
-# Initialize Pygame
 pygame.init()
 
-# Constants
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+WIDTH, HEIGHT = 800, 600
+FPS = 60
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+clock = pygame.time.Clock()
+
+finished = False
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-BRUSH_SIZES = [5, 10, 20, 30]
+PURPLE = (221,160,221)
 
-# Set up the screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Paint Program')
+def drawRect(color, pos, width, height):
+    pygame.draw.rect(screen, color, (pos[0], pos[1], width, height), 4)
 
-# Define button dimensions and positions
-RECT_BUTTON_RECT = pygame.Rect(20, 20, 80, 40)
-CIRCLE_BUTTON_RECT = pygame.Rect(120, 20, 80, 40)
+def drawCircle(color, pos, RAD):
+    pygame.draw.circle(screen, color, pos, RAD, 4)
 
-# Variables
-brush_color = BLACK
-brush_size = BRUSH_SIZES[0]
+def eraser(pos, RAD):
+    pygame.draw.circle(screen, WHITE, pos, RAD)
+
+RAD = 30
+
 drawing = False
-last_pos = None
-using_eraser = False
-drawing_rect = False
-rect_start = None
-rect_end = None
-creating_rect = False  # Track if currently creating a rectangle
+color = BLACK
 
-screen.fill(WHITE)
+screen.fill(pygame.Color('white'))
+rainbow = pygame.image.load('Lab9/images/rainbow.png')
+rainbow = pygame.transform.scale(rainbow, (100, 100))
+start_pos = 0
+end_pos = 0
 
-# Main loop
-while True:
+mode = 0
+# 0 - Rect
+# 1 - Circle
+# 2 - Eraser
+# 3 - Pencil
+
+img_cnt = 0
+
+while not finished:
+    clock.tick(FPS)
+
+    pos = pygame.mouse.get_pos()
+    screen.blit(rainbow, (0, 0))
     for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == MOUSEBUTTONDOWN:
-            if event.button == 1:  # Left mouse button
-                if RECT_BUTTON_RECT.collidepoint(event.pos):
-                    creating_rect = True  # Start creating a rectangle
-                    rect_start = None
-                    rect_end = None
-                elif CIRCLE_BUTTON_RECT.collidepoint(event.pos):
-                    pass
-                else:
-                    drawing = True
-                    last_pos = event.pos
-        elif event.type == MOUSEBUTTONUP:
-            if event.button == 1:
-                if creating_rect:  # Finish creating the rectangle
-                    if rect_start is None:
-                        rect_start = event.pos
-                    elif rect_end is None:
-                        rect_end = event.pos
-                        pygame.draw.rect(screen, brush_color, (rect_start[0], rect_start[1],
-                                                                rect_end[0] - rect_start[0], rect_end[1] - rect_start[1]), 2)
-                        creating_rect = False
-                else:
-                    drawing = False
-                last_pos = None
-        elif event.type == MOUSEMOTION:
-            if drawing:
-                mouse_pos = event.pos
-                if last_pos:
-                    if using_eraser:
-                        pygame.draw.line(screen, WHITE, last_pos, mouse_pos, brush_size)
-                    else:
-                        pygame.draw.line(screen, brush_color, last_pos, mouse_pos, brush_size)
-                last_pos = mouse_pos
-        elif event.type == KEYDOWN:
-            if event.key == K_c:  # Clear the screen
-                screen.fill(WHITE)
-            elif event.key == K_r:  # Change color to red
-                brush_color = RED
-                using_eraser = False
-            elif event.key == K_g:  # Change color to green
-                brush_color = GREEN
-                using_eraser = False
-            elif event.key == K_b:  # Change color to blue
-                brush_color = BLUE
-                using_eraser = False
-            elif event.key == K_s:  # Cycle through brush sizes
-                brush_size = BRUSH_SIZES[(BRUSH_SIZES.index(brush_size) + 1) % len(BRUSH_SIZES)]
-            elif event.key == K_e:  # Toggle eraser
-                using_eraser = not using_eraser
-                if using_eraser:
-                    brush_color = WHITE
+        if event.type == pygame.QUIT:
+            finished = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            drawing = True
+            start_pos = pos
+            if pos[0] > 20 and pos[0] < 100 and pos[1] > 20 and pos[1] < 100:
+                color = screen.get_at(pos)
+        if event.type == pygame.MOUSEBUTTONUP:
+            drawing = False
+            end_pos = pos
+            rect_x = abs(start_pos[0] - end_pos[0])
+            rect_y = abs(start_pos[1] - end_pos[1])
 
-    # Draw buttons
-    pygame.draw.rect(screen, BLACK, RECT_BUTTON_RECT)
-    pygame.draw.rect(screen, BLACK, CIRCLE_BUTTON_RECT)
+            if mode == 0:
+                drawRect(color, start_pos, rect_x, rect_y)
+            elif mode == 1:
+                drawCircle(color, start_pos, rect_x)
 
-    # Draw text on buttons
-    font = pygame.font.Font(None, 36)
-    rect_text = font.render("Rect", True, WHITE)
-    circle_text = font.render("Circle", True, WHITE)
-    screen.blit(rect_text, (RECT_BUTTON_RECT.x + 10, RECT_BUTTON_RECT.y + 10))
-    screen.blit(circle_text, (CIRCLE_BUTTON_RECT.x + 5, CIRCLE_BUTTON_RECT.y + 10))
+        if event.type == pygame.MOUSEMOTION and drawing:
+            if mode == 2:
+                eraser(pos, RAD)
+            elif mode == 3:
+                if start_pos:
+                    pygame.draw.line(screen, color, start_pos, pos, 2)
+                start_pos = pos
 
-    # Update the screen
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                mode += 1
+                mode %= 4
+                if mode == 2:
+                    color = WHITE
+            if event.key == pygame.K_BACKSPACE:
+                screen.fill(pygame.Color('white'))
+
+            if event.key == pygame.K_s:
+                surf = screen.subsurface(pygame.Rect(0, 200, WIDTH, HEIGHT - 200))
+                pygame.image.save(surf, f'./screenshots/photo{img_cnt}.jpg')
+                img_cnt += 1
+
     pygame.display.flip()
+
+pygame.quit()
+sys.exit()
