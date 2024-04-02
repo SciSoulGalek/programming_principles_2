@@ -42,7 +42,7 @@ drawing = False
 color = BLACK
 
 screen.fill(pygame.Color('white'))
-rainbow = pygame.image.load('Lab9/images/rainbow.png')
+rainbow = pygame.image.load('Lab8/images/rainbow.png')
 rainbow = pygame.transform.scale(rainbow, (100, 100))
 start_pos = 0
 end_pos = 0
