@@ -13,7 +13,8 @@ import random, time
  
 #Initializing 
 pygame.init()
- 
+pygame.mixer.init()
+
 #Setting up FPS 
 FPS = 60
 FramePerSec = pygame.time.Clock()
@@ -183,6 +184,11 @@ fuel_bar_height = 10
 fuel_bar_pos = (10, SCREEN_HEIGHT - 30)
 fuel_decrease_rate = 0.1  # Rate at which fuel decreases per frame
 
+#Get the highscore to display
+f = open('Lab9/highscore.txt', 'r')
+HS = f.readline()
+HS = int(HS)
+
 #Adding a new User event(speed increases every second) 
 INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
@@ -223,22 +229,19 @@ while True:
         DISPLAYSURF.blit(background, (0, background_y))
         DISPLAYSURF.blit(background, (0, background_y - SCREEN_HEIGHT))
 
-         # Draw fuel bar
+        #Draw fuel bar
         pygame.draw.rect(DISPLAYSURF, GREEN, (fuel_bar_pos[0], fuel_bar_pos[1], FUEL, fuel_bar_height))
         pygame.draw.rect(DISPLAYSURF, BLACK, (fuel_bar_pos[0], fuel_bar_pos[1], fuel_bar_width, fuel_bar_height), 2)
 
-        # Decrease fuel over time
+        #Decrease fuel over time
         FUEL -= fuel_decrease_rate
 
-        #Get the highscore to display
-        f = open('Lab9/highscore.txt', 'r')
-        HS = f.readline()
-        HS = int(HS)
-
-        #write score, highscore and coins
+        #Display score, highscore and coins
         highscore = font_small.render(f'Highscore:{HS}', True, BLACK)
-        DISPLAYSURF.blit(highscore, (10,10))
         scores = font_small.render(str(SCORE), True, BLACK)
+        if HS <= SCORE:
+            HS = SCORE
+        DISPLAYSURF.blit(highscore, (10,10))
         DISPLAYSURF.blit(scores, (10,30))
         coins = font_small.render(str(COINS), True, BLACK)
         DISPLAYSURF.blit(coins, (360,10))
@@ -282,7 +285,7 @@ while True:
             time.sleep(1)
             #Save the highscore
             f = open('Lab9/highscore.txt', 'w')
-            f.write(str(max(SCORE, HS)))   
+            f.write(str(HS))   
 
             DISPLAYSURF.fill(RED)
             DISPLAYSURF.blit(game_over, (30,250))
