@@ -82,8 +82,8 @@ drawing = False
 color = BLACK
 previous_color = BLACK
 
-screen.fill(pygame.Color('white'))
-rainbow = pygame.image.load('color.jpg')
+screen.fill(WHITE)
+rainbow = pygame.image.load('Lab9/images/rainbow.png')
 rainbow = pygame.transform.scale(rainbow, (100, 100))
 start_pos = 0
 end_pos = 0
@@ -97,7 +97,7 @@ mode = 0
 # 2 - Eraser
 # 3 - Pencil
 
-mode_name = ['rect', 'circle', 'eraser', 'pencil', 'square', 'right tri', 'equil tri', 'rhombus']
+mode_name = ['rect     ', 'circle', 'eraser', 'pencil', 'square', 'right tri', 'equil tri', 'rhombus']
 
 img_cnt = 0
 
