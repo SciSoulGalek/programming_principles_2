@@ -78,10 +78,10 @@ def apply_bonus_perk(perk):
     if perk == 'Speed up':
         PADDLE_SPEED += 5
     elif perk == 'Speed down':
-        if PADDLE_WIDTH < 5:
-            PADDLE_WIDTH = 5
+        if PADDLE_SPEED < 5:
+            PADDLE_SPEED = 5
         else:
-            PADDLE_WIDTH -= 5
+            PADDLE_SPEED -= 5
     elif perk == 'Paddle expand':
         PADDLE_WIDTH += 20
     elif perk == 'Paddle shrink':
