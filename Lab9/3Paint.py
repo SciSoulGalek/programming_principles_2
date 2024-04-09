@@ -49,9 +49,20 @@ def drawRightTriangle(color, start, end):
     pygame.draw.polygon(screen, color, points, 4)
 
 def drawEquilateralTriangle(color, start, end):
-    height = side_length * math.sqrt(3) / 2
-    points = [(pos[0], pos[1] + height), (pos[0] + side_length / 2, pos[1]), (pos[0] + side_length, pos[1] + height)]
-    pygame.draw.polygon(screen, color, points, 4)
+    A1 = [(end[1] - start[1] + end[0]), start[1]]
+    A1 = [A1[0], (start[0] - end[0] + end[1])]
+    p = 1 / math.sqrt(3)
+    x = (start[0] * p + A1[0]) / (1 + p)
+    y = (start[1] * p + A1[1]) / (1 + p)
+    if not math.sqrt((end[0] - x) ** 2 + (end[1] - y) ** 2) == 0:
+        q = ((math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2) - math.sqrt((end[0] - x) ** 2 + (end[1] - y) ** 2))) / math.sqrt((start[0] - x) ** 2 + (end[1] - y) ** 2)
+        x1 = x * (1 + q) - end[0] * q
+        y1 = y * (1 + q) - end[1] * q
+        points = [(start[0], start[1]),
+                (end[0], end[1]),
+                (x1, y1)]
+        pygame.draw.polygon(screen, color, points, 4)
+
 
 def drawRhombus(color, pos, x, y):
     half_x = x / 2
