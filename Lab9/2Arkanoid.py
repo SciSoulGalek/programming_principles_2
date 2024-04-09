@@ -47,13 +47,6 @@ def overtime():
     if collision_cycle % 5 == 0 and PADDLE_WIDTH > 70: 
         PADDLE_WIDTH -= 1
     paddle.width = PADDLE_WIDTH
-# Function to calculate the angle of ball and to rotate it depending on where the ball landed
-def rotate_vector(vector, angle):
-    x, y = vector
-    angle_rad = math.radians(angle)
-    new_x = x * math.cos(angle_rad) - y * math.sin(angle_rad)
-    new_y = x * math.sin(angle_rad) + y * math.cos(angle_rad)
-    return new_x, new_y
 # Function to rotate the ball when it collides with wall, paddle or bricks
 def detect_collision(dx, dy, ball, rect):
     overtime()
