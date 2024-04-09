@@ -40,6 +40,10 @@ font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
 
+#music
+pygame.mixer.music.load('Lab8/music/background.wav')
+pygame.mixer.music.play(-1)
+
 #Background 
 background = pygame.image.load("Lab8/images/AnimatedStreet.png")
 background_y = 0 
