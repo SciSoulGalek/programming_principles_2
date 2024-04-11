@@ -16,6 +16,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GOLD = (255, 215, 0)
+COLOR = WHITE
 PADDLE_WIDTH, PADDLE_HEIGHT = 120, 20
 PADDLE_SPEED = 15
 BALL_RADIUS = 13
@@ -298,7 +299,7 @@ while running:
         # paddle
         pygame.draw.rect(screen, BLUE, paddle)
         # ball
-        pygame.draw.circle(screen, WHITE, ball.center, BALL_RADIUS)
+        pygame.draw.circle(screen, COLOR, ball.center, BALL_RADIUS)
         # bricks
         for brick_data in bricks:
             if brick_data is not None:
